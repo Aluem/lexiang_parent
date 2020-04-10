@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="lexiang_encrypt" />
+        <module name="lexiang_common" />
+        <module name="lexiang_article" />
+        <module name="lexiang_eureka" />
+        <module name="lexiang_notice" />
+        <module name="lexiang_system" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="lexiang_common_model" target="13" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="lexiang_article" options="-parameters" />
+      <module name="lexiang_common" options="-parameters" />
+      <module name="lexiang_common_model" options="-parameters" />
+      <module name="lexiang_encrypt" options="-parameters" />
+      <module name="lexiang_eureka" options="-parameters" />
+      <module name="lexiang_notice" options="-parameters" />
+      <module name="lexiang_system" options="-parameters" />
+    </option>
+  </component>
+</project>

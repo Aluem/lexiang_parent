@@ -1,0 +1,47 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: lexiang-article
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://120.27.192.101:3306/lexiang_article?serverTimezone=GMT%2B8
+    username: root
+    password: root
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss #wrapper处的条件可以识别 map集合不能强转
+    time-zone: GMT+8
+  #mongodb
+  data:
+    mongodb:
+      database: commentdb
+      host: 120.27.192.101
+  redis:
+    host: 120.27.192.101
+    port: 6380
+  rabbitmq:
+    host: 120.27.192.101
+
+#mybatis日志
+mybatis-plus:
+  global-config:
+    db-column-underline: true
+    refresh-mapper: true #开启热加载
+    configuration:
+      map-underscore-to-camel-case: true #开启驼峰命名
+      multipleResultSetsEnabled: true #开启延时加载，否则按需加载属性
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句
+
+
+#Eureka的配置，服务注册到哪里
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+      #defaultZone: http://127.0.0.1:7001/eureka/
+  instance:
+    prefer-ip-address: true #以IP地址注册到服务中心，相互注册使用IP地址
+    instance-id: lexiang-article #修改eureka上的默认描述信息
+
+

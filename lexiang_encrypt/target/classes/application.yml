@@ -1,0 +1,20 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: lexiang-encrypt
+zuul:
+  routes:
+    lexiang-article: #文章
+      path: /article/** #配置请求URL的请求规则
+      serviceId: lexiang-article #指定Eureka注册中心的服务id
+      strip-prefix: true #prefix:路由前缀 该功能未知
+      sentiviteHeaders:
+        customSensitiveHeaders: true #对指定路由开启自定义敏感头
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+  instance:
+    prefer-ip-address: true
