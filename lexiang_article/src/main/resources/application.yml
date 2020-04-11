@@ -22,6 +22,7 @@ spring:
     port: 6380
   rabbitmq:
     host: 120.27.192.101
+    port: 5672
 
 #mybatis日志
 mybatis-plus:

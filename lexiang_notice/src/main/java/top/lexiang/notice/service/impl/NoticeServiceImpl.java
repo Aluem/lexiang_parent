@@ -77,15 +77,17 @@ public class NoticeServiceImpl implements NoticeService {
         String id = idWorker.nextId() + "";
         notice.setId(id);
         //TODO 设置进行操作用户的id  获取用户的角色 设置消息是系统消息（system）还是用户消息（uesr)
-        notice.setOperatorId("1");
-        //保存消息内容
+        notice.setOperatorId("1"); //操作者 A对B进行点赞 该参数是设置A的值
+        // 保存消息内容
         noticeMapper.insert(notice);
 
+        /* 已被rabbitmq替换
         //待推送消息入库，新消息提醒
         NoticeFresh noticeFresh = new NoticeFresh();
         noticeFresh.setNoticeId(id); //消息id
         noticeFresh.setUserId(notice.getReceiverId());//待通知用户的id
         noticeFreshMapper.insert(noticeFresh);
+         */
     }
 
 

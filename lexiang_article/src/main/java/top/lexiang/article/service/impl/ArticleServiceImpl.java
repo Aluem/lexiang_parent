@@ -52,11 +52,14 @@ public class ArticleServiceImpl implements ArticleService {
     //rabbitmq订阅交换机
     private String ARTICLE_SUBSCRIBE_EXCHSNGE = "article_subscribe";
 
+    /**
+     * 新增文章
+     */
     @Override
     @Transactional
     public void save(Article article) throws CommonException {
         //TODO 获取当前登录用户id
-        String authorId = "1";
+        String authorId = "2"; //作者id
 
         String id = idWorker.nextId() + "";
         article.setId(id);
@@ -69,6 +72,10 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         //TODO 文章发布后通知对应文章类型的管理员
+
+        //入库成功后，发送mq消息，内容是消息通知id
+        //第一个参数：使用 订阅者名称的 交互机  第二个参数：作者id作为路由键 第三个参数：存放新文章的id
+        rabbitTemplate.convertAndSend(ARTICLE_SUBSCRIBE_EXCHSNGE, authorId, id);
 
         //暂时先不用审核文章 通知订阅作者的读者发送
         String authorKey = SUBSCRIBE_AUTHORKEY_PRI + authorId;
@@ -131,6 +138,9 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.deleteById(id);
     }
 
+    /**
+     * 订阅文章作者
+     */
     @Override
     @Transactional
     public Boolean subscribe(String articleId) {
@@ -138,7 +148,7 @@ public class ArticleServiceImpl implements ArticleService {
         String authorId = articleMapper.selectById(articleId).getUserid();
 
         //TODO 用户id设置为登录的用户id
-        String userId = "3";
+        String userId = "1";
 
         //创建Rabbit管理器
         RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate.getConnectionFactory());
@@ -148,15 +158,15 @@ public class ArticleServiceImpl implements ArticleService {
         rabbitAdmin.declareExchange(exchange);
 
         //创建queue
-        Queue queue = new Queue(ARTICLE_THUMBUP_PRI + userId, true);
+        Queue queue = new Queue(SUBSCRIBE_USERKEY_PRI + userId, true);
 
-        //声明exchange和queue的绑定关系，设置路由键为作者id
+        //声明exchange和queue的绑定关系，设置路由键为作者id 告诉交互机该队列和该作者连线
         Binding bingding = BindingBuilder.bind(queue).to(exchange).with(authorId);
 
-
-        //用户自己订阅的对象集合
+        //存放用户订阅作者
         String userKey = SUBSCRIBE_USERKEY_PRI + userId;
-        //订阅该用户的对象集合
+
+        //存放作者的订阅者
         String authorKey = SUBSCRIBE_AUTHORKEY_PRI + authorId;
 
         //查询该用户是否已经订阅作者
@@ -166,11 +176,20 @@ public class ArticleServiceImpl implements ArticleService {
             //如果flag未true，已经订阅，则取消订阅
             redisTemplate.boundSetOps(userKey).remove(authorId);
             redisTemplate.boundSetOps(authorKey).remove(userId);
+
+            //删除绑定的队列
+            rabbitAdmin.removeBinding(bingding);
+
             return false;
         } else {
             //如果flag为false，没有订阅，则进行订阅
             redisTemplate.boundSetOps(userKey).add(authorId);
             redisTemplate.boundSetOps(authorKey).add(userId);
+
+            //声明队列和绑定队列
+            rabbitAdmin.declareQueue(queue);
+            rabbitAdmin.declareBinding(bingding);
+
             return true;
         }
 
