@@ -55,11 +55,14 @@
     var sysCount = 0;
     var userCount = 0;
 
+
+
     function connect() {
         connStatus.value = "正在连接 ......";
 
         if(!window.WebSocket){
             window.WebSocket = window.MozWebSocket;
+
         }
         if(window.WebSocket){
 
@@ -110,12 +113,21 @@
         }
     }
 
+    //断开连接方法
     function disconnect() {
+        //window.WebSocket = !window.WebSocket;
         socket.close();
     }
 
+
+
+
+
     function send(message){
-        if(!window.WebSocket){return;}
+        // if(!window.WebSocket){
+        //     alert("!window.WebSocket")
+        //     return;
+        // }
         if(socket.readyState == WebSocket.OPEN){
             socket.send(message);
         }else{

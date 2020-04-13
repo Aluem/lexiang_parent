@@ -148,19 +148,21 @@ public class ArticleServiceImpl implements ArticleService {
         String authorId = articleMapper.selectById(articleId).getUserid();
 
         //TODO 用户id设置为登录的用户id
-        String userId = "1";
+        String userId = "3";
 
-        //创建Rabbit管理器
+        //1.创建Rabbit管理器
         RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate.getConnectionFactory());
 
-        //声明exchange
+        //2.声明Direct类型交换机，处理新增文章消息
         DirectExchange exchange = new DirectExchange(ARTICLE_SUBSCRIBE_EXCHSNGE);
         rabbitAdmin.declareExchange(exchange);
 
-        //创建queue
+        //3.创建队列，每个用户都有自己的队列，通过用户id进行区分
         Queue queue = new Queue(SUBSCRIBE_USERKEY_PRI + userId, true);
 
-        //声明exchange和queue的绑定关系，设置路由键为作者id 告诉交互机该队列和该作者连线
+        //4.声明exchange和queue的绑定关系，
+        // 通过路由键进行绑定作者，队列只收到绑定作者的文章消息
+        //第一个是队列，第二个是交换机，第三个是路由键作者id
         Binding bingding = BindingBuilder.bind(queue).to(exchange).with(authorId);
 
         //存放用户订阅作者
@@ -238,6 +240,15 @@ public class ArticleServiceImpl implements ArticleService {
         notice.setType("user");
 
         noticeClient.save(notice);
+
+        //1.创建Rabbit管理器
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate.getConnectionFactory());
+
+        //2.创建队列，每个用户都有自己的队列，通过作者id进行区分
+        Queue queue = new Queue(ARTICLE_THUMBUP_PRI + article.getUserid(), true);
+        rabbitAdmin.declareQueue(queue);
+        //3.发消息到队列中
+        rabbitTemplate.convertAndSend(ARTICLE_THUMBUP_PRI + article.getUserid(), articleId);
 
         return flag;
     }

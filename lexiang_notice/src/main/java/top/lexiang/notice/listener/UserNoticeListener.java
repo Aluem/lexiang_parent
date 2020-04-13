@@ -12,10 +12,10 @@ import top.lexiang.notice.netty.MyWebSocketHandler;
 import java.util.HashMap;
 
 /**
- * 处理订阅消息
+ * 处理点赞消息
  * Rabbit监听器，用来获取MQ消息并进行处理
  */
-public class SysNoticeListener implements ChannelAwareMessageListener {
+public class UserNoticeListener implements ChannelAwareMessageListener {
 
     private static ObjectMapper MAPPER = new ObjectMapper();
 
@@ -36,7 +36,7 @@ public class SysNoticeListener implements ChannelAwareMessageListener {
             //如果连接不为空，表示用户在线
             //封装返回数据
             HashMap countMap = new HashMap();
-            countMap.put("sysNoticeCount", 1);
+            countMap.put("userNoticeCount", 1);
             Result result = new Result(ResultCode.SUCCESS, countMap);
 
             //把数据通过WebSocket连接主动推送用户

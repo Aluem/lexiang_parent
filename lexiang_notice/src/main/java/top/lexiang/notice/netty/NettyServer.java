@@ -2,6 +2,7 @@ package top.lexiang.notice.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,7 +12,8 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
 /**
- * Netty服务启动类
+ * Netty服务类，配置相应的执行内容
+ *      让NettyConfig类进行启动
  */
 public class NettyServer {
 
@@ -36,12 +38,14 @@ public class NettyServer {
                         channel.pipeline().addLast(new HttpObjectAggregator(65536));
                         //处理webSocket的消息事件
                         channel.pipeline().addLast(new WebSocketServerProtocolHandler("/ws"));
+                        //前端路径：socket = new WebSocket("ws://127.0.0.1:1234/ws"); tip:1234是port
 
                         //创建自己的webSocket处理器，就是用来编写业务逻辑的
                         //addLast相当于给流水线添加工人
                         MyWebSocketHandler myWebSocketHandler = new MyWebSocketHandler();
                         channel.pipeline().addLast(myWebSocketHandler);
                     }
+
                 }).bind(port);
     }
 
