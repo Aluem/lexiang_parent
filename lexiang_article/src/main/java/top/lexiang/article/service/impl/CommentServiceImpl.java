@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import top.lexiang.article.repository.CommentRepository;
 import top.lexiang.article.service.CommentService;
 import top.lexiang.common.utils.IdWorker;
-import top.lexiang.article.entity.Comment;
+import top.lexiang.entity.article.Comment;
 
 import java.util.Date;
 import java.util.List;
@@ -49,7 +49,6 @@ public class CommentServiceImpl implements CommentService {
         //设置自定义id
         comment.setCommentid(id);
 
-        //TODO 从shiro获取userid
         //初始化数据
         comment.setPublishdate(new Date());
         comment.setThumbup(0);
@@ -63,8 +62,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Long update(String commentid, String content) {
-
-        //TODO 从shiro获取userid 多处都需要 可以放在baseService里
 
         Query query = new Query();
         query.addCriteria(Criteria.where("commentid").is(commentid));
@@ -90,10 +87,8 @@ public class CommentServiceImpl implements CommentService {
      *          true 点赞成功
      */
     @Override
-    public boolean thumbup(String commentid) {
+    public boolean thumbup(String commentid, String userid) {
         //不能重复点赞
-        //TODO 获取到用户id
-        String userid = "123";
 
         //在redis中查询用户是否已经点赞
         String redisKey = "thumbup_" + userid + "_" + commentid;

@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.lexiang.common.entity.Result;
 import top.lexiang.common.utils.IdWorker;
+import top.lexiang.entity.notice.Notice;
+import top.lexiang.entity.notice.NoticeFresh;
 import top.lexiang.notice.client.ArticleClient;
 import top.lexiang.notice.client.SystemClient;
-import top.lexiang.notice.entity.Notice;
-import top.lexiang.notice.entity.NoticeFresh;
 import top.lexiang.notice.mapper.NoticeFreshMapper;
 import top.lexiang.notice.mapper.NoticeMapper;
 import top.lexiang.notice.service.NoticeService;
@@ -76,8 +76,6 @@ public class NoticeServiceImpl implements NoticeService {
         //分布式id生成器
         String id = idWorker.nextId() + "";
         notice.setId(id);
-        //TODO 设置进行操作用户的id  获取用户的角色 设置消息是系统消息（system）还是用户消息（uesr)
-        notice.setOperatorId("1"); //操作者 A对B进行点赞 该参数是设置A的值
         // 保存消息内容
         noticeMapper.insert(notice);
 

@@ -12,12 +12,10 @@
         <module name="lexiang_article" />
         <module name="lexiang_eureka" />
         <module name="lexiang_notice" />
+        <module name="lexiang_common_model" />
         <module name="lexiang_system" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="lexiang_common_model" target="13" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

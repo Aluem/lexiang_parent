@@ -1,6 +1,7 @@
 package top.lexiang.article.service;
 
-import top.lexiang.article.entity.Comment;
+
+import top.lexiang.entity.article.Comment;
 
 import java.util.List;
 
@@ -41,6 +42,6 @@ public interface CommentService {
      * 评论点赞
      * @return
      */
-    boolean thumbup(String id);
+    boolean thumbup(String id, String userid);
 
 }

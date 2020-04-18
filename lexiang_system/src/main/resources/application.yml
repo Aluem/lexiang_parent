@@ -12,9 +12,13 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss #wrapper处的条件可以识别 map集合不能强转
     time-zone: GMT+8
+  redis:
+    host: 120.27.192.101
+    port: 6380
 
 #mybatis日志
 mybatis-plus:
+  mapper-locations: classpath:mybatis/mapper/*.xml
   global-config:
     db-column-underline: true
     refresh-mapper: true #开启热加载
@@ -31,3 +35,5 @@ eureka:
   instance:
     prefer-id-address: true
     instance-id: lexiang-system
+
+

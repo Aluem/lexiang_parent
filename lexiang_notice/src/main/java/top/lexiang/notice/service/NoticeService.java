@@ -1,8 +1,9 @@
 package top.lexiang.notice.service;
 
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import top.lexiang.notice.entity.Notice;
-import top.lexiang.notice.entity.NoticeFresh;
+import top.lexiang.entity.notice.Notice;
+import top.lexiang.entity.notice.NoticeFresh;
 
 public interface NoticeService {
 

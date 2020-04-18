@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lexiang.system.mapper.RoleMapper">
+<!--    通过角色获取到该角色所有权限
+    List<Permission> findAllPermission(String roleId);
+-->
+    <select id="findAllPermission" resultType="top.lexiang.entity.system.Permission">
+        select p.*
+        from tb_role_permission rp
+        left join tb_permission p
+        on rp.permission_id = p.id
+        where rp.role_id = #{roleId}
+    </select>
+</mapper>

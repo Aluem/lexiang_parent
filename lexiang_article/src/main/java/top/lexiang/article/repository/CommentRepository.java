@@ -1,7 +1,8 @@
 package top.lexiang.article.repository;
 
+
 import org.springframework.data.mongodb.repository.MongoRepository;
-import top.lexiang.article.entity.Comment;
+import top.lexiang.entity.article.Comment;
 
 import java.util.List;
 

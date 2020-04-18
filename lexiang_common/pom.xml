@@ -12,11 +12,22 @@
     <artifactId>lexiang_common</artifactId>
 
     <dependencies>
+        <!-- Feign-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
         <!--  mybatis-plus  -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.3.0</version>
+        </dependency>
+        <!--  模块类  -->
+        <dependency>
+            <groupId>top.aluem</groupId>
+            <artifactId>lexiang_common_model</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

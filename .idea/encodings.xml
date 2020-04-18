@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/lexiang_article/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lexiang_common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lexiang_common_model/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lexiang_encrypt/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lexiang_eureka/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lexiang_notice/src/main/java" charset="UTF-8" />

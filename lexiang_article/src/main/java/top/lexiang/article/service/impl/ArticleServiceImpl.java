@@ -1,7 +1,6 @@
 package top.lexiang.article.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -14,14 +13,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import top.lexiang.article.client.NoticeClient;
-import top.lexiang.article.entity.Notice;
 import top.lexiang.article.mapper.ArticleMapper;
 import top.lexiang.article.service.ArticleService;
 import top.lexiang.common.entity.ResultCode;
 import top.lexiang.common.exception.CommonException;
 import top.lexiang.common.query.QWrapper;
 import top.lexiang.common.utils.IdWorker;
-import top.lexiang.article.entity.Article;
+import top.lexiang.entity.article.Article;
+import top.lexiang.entity.notice.Notice;
 
 import java.util.Map;
 import java.util.Set;
@@ -58,12 +57,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public void save(Article article) throws CommonException {
-        //TODO 获取当前登录用户id
-        String authorId = "2"; //作者id
+
+        String authorId = article.getUserid(); //作者id
 
         String id = idWorker.nextId() + "";
         article.setId(id);
-        article.setUserid(authorId);
 
         if (!StringUtils.isEmpty(article.getState())){
             throw new CommonException(ResultCode.UNAUTHORISE);
@@ -101,13 +99,16 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Page searchLike(Map<String, Object> map, Integer page, Integer size) {
+    public Page searchLike(Map<String, Object> map, Integer page, Integer size, String roleId) {
         QWrapper<Article> wrapper = new QWrapper<>();
 
-        //TODO 管理员可以忽略该步骤
-        //用户看到的必须是已经公开、已经发布的视频
-        wrapper.eq("ispublic", "1");
-        wrapper.eq("state", 1);
+        // 管理员可以忽略该步骤
+        if(StringUtils.isEmpty(roleId)){
+            //用户看到的必须是已经公开、已经发布的视频
+            wrapper.eq("ispublic", "1");
+            wrapper.eq("state", 1);
+        }
+
 
         if (map != null) {
             Set<String> fieldSet = map.keySet();
@@ -124,13 +125,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public int update(String id, Article article) throws CommonException {
-        //TODO 判断用户角色 成员则判断修改的state（审核状态）、点赞数等 必须为空
-        if (StringUtils.isEmpty(article.getState())) {
             article.setId(id);
             return articleMapper.updateById(article);
-        } else {
-            throw new CommonException(ResultCode.UNAUTHORISE);
-        }
     }
 
     @Override
@@ -143,12 +139,9 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional
-    public Boolean subscribe(String articleId) {
+    public Boolean subscribe(String articleId, String userId) {
         //根据文章id查询文章作者id
         String authorId = articleMapper.selectById(articleId).getUserid();
-
-        //TODO 用户id设置为登录的用户id
-        String userId = "3";
 
         //1.创建Rabbit管理器
         RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate.getConnectionFactory());
@@ -200,10 +193,9 @@ public class ArticleServiceImpl implements ArticleService {
     //文章点赞+点赞通知
     @Override
     @Transactional
-    public Boolean thumbup(String articleId) {
+    public Boolean thumbup(String articleId, String userId) {
         //文章点赞
-        //TODO 获取用户ID
-        String userId = "3";
+
         String key = ARTICLE_THUMBUP_PRI + userId + "_" + articleId;
 
         //根据用户id和文章id查询用户点赞信息 是否点赞
